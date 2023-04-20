@@ -1,4 +1,4 @@
-# Collections
+# Collections (목록)
 
 `Dart` 는 내장 타입으로 `list`, `set` 그리고 `map` 을 제공합니다.
 
@@ -10,7 +10,7 @@ var list [1, 2, 3];
 
 > Note: `Dart` 에서 리스트는 `List<int>` 타입이라고 추론합니다. 정수가 아닌 객체를 이 리스트에 추가하려고 하면 `analyzer` 또는 `runtime` 에서 에러가 발생합니다.
 
-콜렉션 리스트 아이템 마지막에 `,` 를 추가할 수 있습니다. 이 쉼표는 콜렉션에 영향을 미치지는 않지만, 복사-붙여넣기 에러를 방지하는 데에 도움이 될 수 있습니다.
+`목록` 리스트 아이템 마지막에 `,` 를 추가할 수 있습니다. 이 쉼표는 `목록` 에 영향을 미치지는 않지만, 복사-붙여넣기 에러를 방지하는 데에 도움이 될 수 있습니다.
 ```dart
 var list = [
   'Car',
@@ -36,7 +36,7 @@ var constantList = const [1, 2, 3];
 ```
 
 ## Sets
-`Dart` 의 셋은 고유한 아이템들의 정렬되지 않은 콜렉션입니다. 셋은 셋 리터럴과 `Set` 타입이 제공됩니다.
+`Dart` 의 셋은 고유한 아이템들의 정렬되지 않은 `목록` 입니다. 셋은 셋 리터럴과 `Set` 타입이 제공됩니다.
 ```dart
 var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
 ```
@@ -150,4 +150,37 @@ final constantMap = const {
 };
 
 // constantMap[2] = 'Helium'; // 에러 발생
+```
+
+## Operators
+
+### Spread operators
+`Dart` 는 리스트, 맵 그리고 셋 리터럴에 사용할 수 있는 `스프레드 연산자(...)` 와 `null 인식 스프레드 연산자(...?)` 를 지원합니다. 스프레드 연산자는 `목록` 에 여러개의 값을 추가하는 간결한 방식을 제공합니다.
+
+예를 들면, 리스트의 모든 값을 다른 리스트에 추가할 수 있습니다.
+```dart
+var list = [1, 2, 3];
+var list2 = [0, ...list];
+assert(list2.length == 4);
+```
+
+`스프레드 연산자` 오른쪽의 표현식이 null이 될 수 있는 경우, `null 인식 스프레드 연산자` 로 예외를 피할 수 있습니다.
+```dart
+var list2 = [0, ...?list];
+assert(list2.length == 1);
+```
+
+### Control-flow operators
+`Dart` 는 리스트, 맵 그리고 셋 리터럴에 사용할 수 있는 `collection if` 와 `collection for` 를 지원합니다. 이 연산자를 사용해서 `목록` 의 아이템을 조건부로, 그리고 반복적으로 생성할 수 있습니다.
+
+`collection if` 를 사용해서 아래와 같이 세개 또는 네개의 아이템을 가진 리스트를 생성할 수 있습니다.
+```dart
+var nav = ['Home', 'Furniture', 'Plants', if (promoActive) 'Outlet'];
+```
+
+`collection for` 를 사용해서 리스트를 다른 리스트에 추가하기 전에 가공할 수도 있습니다.
+```dart
+var listOfInts = [1, 2, 3];
+var listOfStrings = ['#0', for (var i in listOfInts) '#$i'];
+assert(listOfStrings[1] == '#1');
 ```
