@@ -2,7 +2,7 @@
 
 `Dart` 는 내장 타입으로 `list`, `set` 그리고 `map` 을 제공합니다.
 
-### List
+## List
 `Dart` 에서의 배열은 `List` 라고 불립니다. 리스트 리터럴은 `,` 로 구분된 표현식 또는 값을 `[]` 로 묶은 객체입니다.
 ```dart
 var list [1, 2, 3];
@@ -35,7 +35,7 @@ var constantList = const [1, 2, 3];
 // constantList[1] = 1; // 에러 발생
 ```
 
-### Sets
+## Sets
 `Dart` 의 셋은 고유한 아이템들의 정렬되지 않은 콜렉션입니다. 셋은 셋 리터럴과 `Set` 타입이 제공됩니다.
 ```dart
 var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
@@ -80,7 +80,7 @@ final constantSet = const {
 // constantSet.add('helium'); // 에러 발생
 ```
 
-### Maps
+## Maps
 일반적으로 맵은 키와 값을 연결하는 객체입니다. 키와 값은 어떤 타입의 객체가 될 수 있습니다. 키는 하나만 존재할 수 있지만, 값은 같은 값이 중복될 수 있습니다. 맵은 맵 리터럴과 `Map` 타입이 제공됩니다.
 
 `Dart` 에서 맵을 만드는 방법은 아래와 같습니다.

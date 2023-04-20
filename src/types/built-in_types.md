@@ -28,7 +28,7 @@
 
 `Object`, `Object?`, `Null` 그리고 `Never` 클래스는 `null safety` 에서 특별한 역할을 합니다.
 
-### Numbers
+## Numbers
 `Dart` 에서 `Numbers` 타입은 두가지가 있습니다.
 
 `int`: 플랫폼에 따라 다르지만, 64비트 이하의 값을 가집니다. 네이티브 플랫폼에서는 -2^63 부터 2^63 - 1 사이의 값을 가질 수 있습니다. 웹에서는 `JavaScript` 숫자로 표시되며 -2^53 부터 2^53 - 1 사이의 값을 가질 수 있습니다.
@@ -94,7 +94,7 @@ const secondsUtilRetry = 5;
 const msUntilRetry = secondsUtilRetry * msPerSecond;
 ```
 
-### Strings
+## Strings
 `Dart` 의 `String` 타입은 UTF-16 코드 단위 시퀀스를 가지고 있습니다. 작은 따옴표 또는 큰 따옴표를 사용해서 문자열을 만들 수 있습니다.
 ```dart
 var s1 = 'Single quotes work well for string literals.';
@@ -164,7 +164,7 @@ const validConstString = '$aConstNum $aConstBool $aConstString';
 // const invalidConstString = '$aNum $aBool $aString $aConstList';
 ```
 
-### Booleans
+## Booleans
 `boolean` 값의 타입은 `bool` 입니다. `true` 와 `false` 두 객체만이 `boolean` 타입을 표현할 수 있고, 둘 다 컴파일타임 상수입니다.
 ```dart
 // 빈 문자열 체크
