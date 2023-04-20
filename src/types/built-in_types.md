@@ -163,3 +163,23 @@ const aConstList = [1, 2, 3];
 const validConstString = '$aConstNum $aConstBool $aConstString';
 // const invalidConstString = '$aNum $aBool $aString $aConstList';
 ```
+
+### Booleans
+`boolean` 값의 타입은 `bool` 입니다. `true` 와 `false` 두 객체만이 `boolean` 타입을 표현할 수 있고, 둘 다 컴파일타임 상수입니다.
+```dart
+// 빈 문자열 체크
+var fullName = '';
+assert(fullName.isEmpty);
+
+// 0 체크
+var hitPoints = 0;
+assert(hitPoints <= 0);
+
+// null 체크
+var unicorn = null;
+assert(unicorn == null);
+
+// NaN 체크
+var iMeantToDoThis = 0 / 0;
+assert(iMeantToDoThis.isNaN);
+```
