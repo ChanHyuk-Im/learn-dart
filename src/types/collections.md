@@ -79,3 +79,75 @@ final constantSet = const {
 };
 // constantSet.add('helium'); // 에러 발생
 ```
+
+### Maps
+일반적으로 맵은 키와 값을 연결하는 객체입니다. 키와 값은 어떤 타입의 객체가 될 수 있습니다. 키는 하나만 존재할 수 있지만, 값은 같은 값이 중복될 수 있습니다. 맵은 맵 리터럴과 `Map` 타입이 제공됩니다.
+
+`Dart` 에서 맵을 만드는 방법은 아래와 같습니다.
+```dart
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+```
+
+> Note: `Dart` 는 `gifts` 변수의 타입을 `Map<String, String>` 으로 추론하고, `nobleGases` 변수의 타입을 `Map<int, String>` 으로 추론합니다.
+
+`Map` 생성자를 이용해서 같은 객체를 만들 수 있습니다.
+```dart
+var gifts = Map<String, String>();
+gifts['first'] = 'partridge';
+gifts['second'] = 'turtledoves';
+gifts['fifth'] = 'golden rings';
+
+var nobleGases = Map<int, String>();
+nobleGases[2] = 'helium';
+nobleGases[10] = 'neon';
+nobleGases[18] = 'argon';
+```
+
+> Note: 다른 객체지향 언어에 익숙한 경우에는 `Map()` 대신에 `new Map()` 을 사용하고 싶을 수 있습니다. `Dart` 에서 `new` 키워드는 선택사항입니다.
+
+새로운 키-값 쌍을 추가하고싶으면, `[]=` 연산자를 사용합니다.
+```dart
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds'; // 키-값 쌍 추가
+```
+
+값에 접근할 때에는 `[]` 연산자를 사용합니다.
+```dart
+var gifts = {'first': 'partridge'};
+assert(gifts['first'] == 'partridge');
+```
+
+맵에 키에 해당하는 값이 없는 경우에는 `null` 을 반환합니다.
+```dart
+var gifts = {'first': 'partridge'};
+assert(gifts['fifth'] == null);
+```
+
+`.length` 속성으로 맵의 키-값 쌍의 갯수를 구할 수 있습니다.
+```dart
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds';
+assert(gifts.length == 2);
+```
+
+컴파일타임 상수 맵을 만들려면 맵 리터럴 앞에 `const` 키워드를 붙이면 됩니다.
+```dart
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // 에러 발생
+```
