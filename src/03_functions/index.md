@@ -105,3 +105,27 @@ String say(String from, String msg, [String device = 'carrier pigeon']) {
 
 assert(say('Bob', 'Howdy') == 'Bob says Howdy with a carrier pigeon');
 ```
+
+## main() 함수
+모든 앱에는 앱의 진입점 역할을 하는 최상위의 `main()` 함수가 있어야 합니다. `main()` 함수는 `void` 를 반환하고 인수에 대한 선택적인 `List<String>` 파라미터가 있습니다.
+
+간단한 `main()` 함수입니다.
+```dart
+void main() {
+  print('Hello, World!');
+}
+```
+
+다음은 인수를 사용하는 커맨드라인 앱의 `main()` 함수입니다.
+```dart
+// 이 앱의 실행 명령어: dart args.dart 1 test
+void main(List<String> arguments) {
+  print(arguments);
+
+  assert(arguments.length == 2);
+  assert(int.parse(arguments[0]) == 1);
+  assert(arguments[1] == 'test');
+}
+```
+
+`args` 라이브러리를 사용해서 커맨드라인 인수를 정의하고 분석할 수 있습니다.
