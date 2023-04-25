@@ -206,3 +206,25 @@ void main() {
 ```
 
 `nestedFunction()` 이 어떻게 모든 `스코프` 레벨에서 최상위 `스코프` 레벨까지의 변수를 사용할 수 있는지 확인해보세요.
+
+## 렉시컬 클로저 (Lexical Closures)
+`클로저` 는 `함수` 가 원래의 `스코프` 밖에서 사용되는 경우에도 `렉시컬 스코프` 내부의 변수에 접근할 수 있는 `함수 객체` 입니다.
+
+`함수` 는 해당 `스코프` 에 정의된 변수를 기억합니다. 다음 예제에서는 `makeAdder()` 함수가 `addBy` 변수를 기억합니다. 반환된 `함수` 가 어디에서 사용이 되더라도, `addBy` 의 값을 기억합니다.
+```dart
+/// [addBy] 를 함수의 인수에 더하는 함수를 반환합니다.
+Function makeAdder(int addBy) {
+  return (int i) => addBy + i;
+}
+
+void main() {
+  // 2를 더하는 함수를 만듭니다.
+  var add2 = makeAdder(2);
+
+  // 4를 더하는 함수를 만듭니다.
+  var add4 = makeAdder(4);
+
+  assert(add2(3) == 5);
+  assert(add4(3) == 7);
+}
+```
