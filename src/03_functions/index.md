@@ -150,3 +150,32 @@ assert(loudify('hello') == '!!! HELLO !!!');
 ```
 
 위 예시에서는 `익명함수` 를 사용했습니다.
+
+## 익명함수 (Anonymous Functions)
+대부분의 `함수` 는 `main()` 또는 `printElement()` 처럼 이름이 지정되어 있습니다. `익명함수`, `람다` 또는 `클로저` 라고 불리는 이름없는 함수를 만들 수도 있습니다.
+
+`익명함수` 는 이름이 있는 `함수` 와 비슷한 구조입니다. (괄호 안에 쉼표로 구분된 0개 이상의 파라미터를 가집니다.)
+
+다음 코드는 `익명함수` 의 형태입니다.
+```dart
+([[Type] param1[, …]]) {
+  codeBlock;
+};
+```
+
+다음 예제에서는 타입이 없는 파라미터인 `item` 을 가지고 있는 `익명함수` 를 `map` 함수에 전달합니다. 리스트의 각 항목에 대해 호출되는 `익명함수` 는 각 문자열을 대문자로 변환합니다. 그리고나서 `forEach` 에 전달된 `익명함수` 는 각 문자열과 그 길이를 출력합니다.
+```dart
+const list = ['apples', 'bananas', 'oranges'];
+list.map((item) {
+  return item.toUpperCase();
+}).forEach((item) {
+  print('$item: ${item.length}');
+});
+```
+
+`함수` 에 단일식 또는 반환문만 있는 경우에는 화살표 표기법을 사용해서 간단하게 작성할 수 있습니다.
+```dart
+list
+  .map((item) => item.toUpperCase())
+  .forEach((item) => print('$item: ${item.length}'));
+```
