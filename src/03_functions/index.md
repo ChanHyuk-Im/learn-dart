@@ -129,3 +129,24 @@ void main(List<String> arguments) {
 ```
 
 `args` 라이브러리를 사용해서 커맨드라인 인수를 정의하고 분석할 수 있습니다.
+
+## 일급 객체로써의 함수
+`함수` 를 다른 `함수` 의 파라미터로 사용할 수 있습니다.
+```dart
+void printElement(int element) {
+  print(element);
+}
+
+var list = [1, 2, 3];
+
+// printElement 함수를 파라미터로 전달합니다.
+list.forEach(printElement);
+```
+
+`함수` 를 변수에 할당할 수도 있습니다.
+```dart
+var loudify = (msg) => '!!! ${msg.toUpperCase()} !!!';
+assert(loudify('hello') == '!!! HELLO !!!');
+```
+
+위 예시에서는 `익명함수` 를 사용했습니다.
