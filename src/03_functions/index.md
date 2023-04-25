@@ -179,3 +179,30 @@ list
   .map((item) => item.toUpperCase())
   .forEach((item) => print('$item: ${item.length}'));
 ```
+
+## 렉시컬 스코프 (Lexical Scope)
+`Dart` 는 `렉시컬 스코프` 가 있는 언어입니다. 즉, 변수의 `스코프` 는 단순히 코드의 레이아웃에 의해 결정된다는 것을 의미합니다. 변수가 `스코프` 안에 있는지 확인하려면 `중괄호를 바깥쪽으로 따라가면` 됩니다.
+
+다음은 각 `스코프` 수준에서 변수가 있는 `중첩함수` 의 예시입니다.
+```dart
+bool topLevel = true;
+
+void main() {
+  var insideMain = true;
+
+  void myFunction() {
+    var insideFunction = true;
+
+    void nestedFunction() {
+      var insideNestedFunction = true;
+
+      assert(topLevel);
+      assert(insideMain);
+      assert(insideFunction);
+      assert(insideNestedFunction);
+    }
+  }
+}
+```
+
+`nestedFunction()` 이 어떻게 모든 `스코프` 레벨에서 최상위 `스코프` 레벨까지의 변수를 사용할 수 있는지 확인해보세요.
