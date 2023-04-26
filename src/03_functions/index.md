@@ -263,3 +263,11 @@ void main() {
   assert(v.baz != w.baz);
 }
 ```
+
+## 반환값 (Return Values)
+모든 `함수` 는 `반환값` 을 가집니다. 만약 명시된 `반환값` 이 없으면, `return null;` 구문이 `함수` 본문에 암시적으로 추가됩니다.
+```dart
+foo() {}
+
+assert(foo() == null);
+```
