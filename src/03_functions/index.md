@@ -271,3 +271,35 @@ foo() {}
 
 assert(foo() == null);
 ```
+
+## 제너레이터 (Generators)
+일련의 값을 천천히(`lazily`) 생성해야 하는 경우에는 `제너레이터 함수` 를 사용하는 것이 좋습니다. `Dart` 는 두 가지 유형의 내장 `제너레이터 함수` 를 지원합니다.
+
+- 동기 제너레이터(`Synchronous Generator`): `Iterable` 객체를 반환합니다.
+- 비동기 제너레이터(`Asynchronous Generator`): `Stream` 객체를 반환합니다.
+
+`동기 제너레이터 함수` 를 구현하려면 `함수` 본문을 `sync*` 로 표시하고 `yield` 문을 사용해서 값을 전달합니다.
+```dart
+Iterable<int> naturalsTo(int n) sync* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+`비동기 제너레이터 함수` 를 구현하려면 `함수` 본문을 `async*`로 표시하고 `yield` 문을 사용해서 값을 전달합니다.
+```dart
+Stream<int> asynchronousNaturalsTo(int n) async* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+`제너레이터` 가 재귀적인 경우, `yield*` 를 사용하면 성능을 향샹시킬 수 있습니다.
+```dart
+Iterable<int> naturalsDownFrom(int n) sync* {
+  if (n > 0) {
+    yield n;
+    yield* naturalsDownFrom(n - 1);
+  }
+}
+```
