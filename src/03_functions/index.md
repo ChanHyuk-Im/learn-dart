@@ -228,3 +228,38 @@ void main() {
   assert(add4(3) == 7);
 }
 ```
+
+## 함수의 동일성 테스트
+다음 예제는 `최상위 함수`, `정적 메서드` 그리고 `인스턴스 메서드` 의 동일성을 테스트하는 코드입니다.
+```dart
+void foo() {} // 최상위 함수
+
+class A {
+  static void bar() {} // 정적 메서드
+  void baz() {} // 인스턴스 메서드
+}
+
+void main() {
+  Function x;
+
+  // 최상위 함수 비교
+  x = foo;
+  assert(foo == x);
+
+  // 정적 메서드 비교
+  x = A.bar;
+  assert(A.bar == x);
+
+  // 인스턴스 메서드 비교
+  var v = A(); // A의 첫번째 인스턴스
+  var w = A(); // A의 두번째 인스턴스
+  var y = w;
+  x = w.baz;
+
+  // 이 클로저는 두번째 인스턴스를 참조합니다.
+  assert(y.baz == x);
+
+  // 이 클로저는 다른 인스턴스를 참조합니다.
+  assert(v.baz != w.baz);
+}
+```
