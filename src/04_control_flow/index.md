@@ -176,3 +176,32 @@ switch (command) {
 ```
 
 `case` 절은 스코프 내부에서만 사용할 수 있는 지역변수를 가질 수 있습니다.
+
+## assert
+개발 중에 `bool` 조건이 `false` 인 경우 `assert(조건, 추가 메세지)` 를 사용해서 실행을 중지할 수 있습니다. 다음은 예제코드입니다.
+```dart
+// 변수가 null이 아닌지 확인합니다.
+assert(text != null);
+
+// 변수가 100보다 작은지 확인합니다.
+assert(number < 100);
+
+// https URL 유형이 맞는지 확인합니다.
+assert(urlString.startsWith('https'));
+```
+
+`assertion` 에 메세지를 추가하려면 `assert` 의 두 번째 인수에 문자열을 추가합니다.
+```dart
+assert(urlString.startsWith('https'),
+  'URL ($urlString) should start with "https".');
+```
+
+`assert` 의 첫 번째 인수는 `bool` 값으로 확인되는 모든 표현식이 올 수 있습니다. 표현식이 `true` 인 경우에는 `assertion` 이 성공하고 실행이 계속됩니다. 표현식이 `false` 인 경우에는 `assertion` 이 실패하고 예외(`AssertionError`)를 발생시킵니다.
+
+`assertion` 은 사용중인 도구와 프레임워크에 따라 다르게 작동합니다.
+
+- `Flutter` 는 `디버그 모드` 에서 `assertion` 을 활성화합니다.
+- `webdev serve` 같은 개발 전용 도구는 보통 기본적으로 `assertion` 을 활성화합니다.
+- `dart run` 및 `dart compile js` 와 같은 일부 도구는 `-enable-asserts` 커맨드라인 플래그를 통해 `assertion` 을 지원합니다.
+
+`프로덕션` 코드에서는 `assertion` 이 무시되고, `assert` 의 인수가 평가되지 않습니다.
