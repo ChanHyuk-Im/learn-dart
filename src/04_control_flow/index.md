@@ -75,3 +75,30 @@ do {
   printLine();
 } while (!atEndOfPage());
 ```
+
+## break 와 continue
+`break` 를 사용하면 루프를 탈출할 수 있습니다.
+```dart
+while (true) {
+  if (shutDownRequested()) break;
+  processIncomingRequests();
+}
+```
+
+`continue` 를 사용하면 다음 루프 반복으로 건너뜁니다.
+```dart
+for (int i = 0; i < candidates.length; i++) {
+  var candidate = candidates[i];
+  if (candidate.yearsExperience < 5) {
+    continue;
+  }
+  candidate.interview();
+}
+```
+
+리스트나 셋 같은 `Iterable` 을 사용하는 경우에는 위 예제코드를 다르게 작성할 수 있습니다.
+```dart
+candidates
+  .where((c) => c.yearsExperience >= 5)
+  .forEach((c) => c.interview());
+```
