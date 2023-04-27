@@ -102,3 +102,77 @@ candidates
   .where((c) => c.yearsExperience >= 5)
   .forEach((c) => c.interview());
 ```
+
+## switch 와 case
+`Dart` 의 `switch` 문은 `==` 를 사용해서 정수, 문자열 또는 컴파일타임 상수를 비교합니다. 비교 대상은 모두 동일한 클래스의 인스턴스여야 하며, 클래스는 `==` 를 재정의하지 않아야 합니다. `Enum` 타입은 `switch` 문에서 잘 작동합니다.
+
+비어있지 않은 각각의 `case` 절은 일반적으로 `break` 문으로 끝납니다. 비어있지 않은 `case` 절을 종료하는 다른 방법은 `continue`, `throw` 또는 `return` 문이 있습니다.
+
+일치하는 `case` 절이 없을 경우에는 `default` 절을 사용해서 코드를 실행할 수 있습니다.
+```dart
+var command = 'OPEN';
+switch (command) {
+  case 'CLOSED':
+    executeClosed();
+    break;
+  case 'PENDING':
+    executePending();
+    break;
+  case 'APPROVED':
+    executeApproved();
+    break;
+  case 'DENIED':
+    executeDenied();
+    break;
+  case 'OPEN':
+    executeOpen();
+    break;
+  default:
+    executeUnknown();
+}
+```
+
+다음 예제코드는 `break` 문이 없어서 `case` 절에서 에러가 발생합니다.
+```dart
+var command = 'OPEN';
+switch (command) {
+  case 'OPEN':
+    executeOpen();
+    // ERROR: Missing break
+
+  case 'CLOSED':
+    executeClosed();
+    break;
+}
+```
+
+하지만 `Dart` 는 비어있는 `case` 절을 지원하므로 아래와 같이 코드를 작성할 수 있습니다.
+```dart
+var command = 'CLOSED';
+switch (command) {
+  case 'CLOSED': // 비어있는 case 절은 아래의 case 절이 실행됩니다.
+  case 'NOW_CLOSED':
+    // CLOSED 와 NOW_CLOSED 둘 다 실행됩니다.
+    executeNowClosed();
+    break;
+}
+```
+
+`case` 절을 통과시키려면 `continue` 와 `label` 을 사용하면 됩니다.
+```dart
+var command = 'CLOSED';
+switch (command) {
+  case 'CLOSED':
+    executeClosed();
+    continue nowClosed;
+  // nowClosed label 로 이동합니다.
+
+  nowClosed:
+  case 'NOW_CLOSED':
+    // CLOSED 와 NOW_CLOSED 둘 다 실행됩니다.
+    executeNowClosed();
+    break;
+}
+```
+
+`case` 절은 스코프 내부에서만 사용할 수 있는 지역변수를 가질 수 있습니다.
