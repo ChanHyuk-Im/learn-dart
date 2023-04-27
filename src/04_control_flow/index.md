@@ -60,3 +60,18 @@ for (final candidate in candidates) {
 var collection = [1, 2, 3];
 collection.forEach(print); // 1 2 3
 ```
+
+## while 과 do-while
+`while` 루프는 루프를 `실행하기 전` 에 조건을 평가합니다.
+```dart
+while (!isDone()) {
+  doSomething();
+}
+```
+
+`do-while` 루프는 루프를 `실행하고 난 후` 에 조건을 평가합니다.
+```dart
+do {
+  printLine();
+} while (!atEndOfPage());
+```
