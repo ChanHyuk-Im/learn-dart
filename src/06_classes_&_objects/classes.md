@@ -141,3 +141,40 @@ abstract class AbstractContainer {
   void updateChildren(); // 추상 메서드
 }
 ```
+
+## 암시적 인터페이스 (Implicit Interfaces)
+모든 클래스는 클래스와 클래스가 구현하는 모든 인터페이스의 모든 인스턴스 멤버를 포함하는 인스턴스를 암시적으로 정의합니다. B 클래스의 구현을 상속받지 않고 B 클래스의 API를 지원하는 A 클래스를 생성하려면, A 클래스가 B 인터페이스를 구현해야 합니다.
+
+클래스는 `implements` 절에 인터페이스를 선언한 다음, 인터페이스에 필요한 API를 제공하여 하나 이상의 인터페이스를 구현합니다. 다음은 예시 코드입니다.
+```dart
+// Person 클래스. 암시적 인터페이스에는 greet()이 있습니다.
+class Person {
+  // 인터페이스에는 존재하지만, 이 인터페이스 내부에서만 사용할 수 있습니다.
+  final String _name;
+
+  // 생성자이므로 인터페이스에 존재하지 않습니다.
+  Person(this._name);
+
+  // 인터페이스에 존재합니다.
+  String greet(String who) => 'Hello, $who. I am $_name.';
+}
+
+// Person 인터페이스의 구현체입니다.
+class Impostor implements Person {
+  String get _name => '';
+
+  String greet(String who) => 'Hi $who. Do you know who I am?';
+}
+
+String greetBob(Person person) => person.greet('Bob');
+
+void main() {
+  print(greetBob(Person('Kathy')));
+  print(greetBob(Impostor()));
+}
+```
+
+다음은 클래스가 여러 인터페이스를 구현하도록 명시하는 예시입니다.
+```dart
+class Point implements Comparable, Location {...}
+```
