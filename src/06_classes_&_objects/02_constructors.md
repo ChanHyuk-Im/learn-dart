@@ -217,3 +217,45 @@ class ImmutablePoint {
 ```
 
 `상수 생성자` 가 항상 상수를 생성하는 것은 아닙니다. 자세한 내용은 [생성자 사용하기](https://dart.dev/language/classes#using-constructors) 를 확인하세요.
+
+## 팩토리 생성자 (Factory Constructors)
+항상 새로운 인스턴스를 생성하지 않는 생성자를 구현할 때 `factory` 키워드를 사용합니다. 예를 들어, `팩토리 생성자` 는 캐시(`cache`)에서 인스턴스를 반환하거나 하위 타입의 인스턴스를 반환할 수 있습니다. 팩토리 생성자의 또 다른 사용 사례는 초기화 목록에서 처리할 수 없는 로직을 사용하여 `final` 변수를 초기화하는 것입니다.
+
+> Tip: `final` 변수의 `늦은 초기화(late initialization)` 를 처리하는 또 다른 방법은 `late final` 을 사용하는 것입니다. ([주의하세요.](https://dart.dev/guides/language/effective-dart/design#avoid-public-late-final-fields-without-initializers))
+
+다음 예제에서는 `Logger` 팩토리 생성자가 캐시에서 객체를 반환하고, `Logger.fromJson` 팩토리 생성자가 JSON 객체에서 `final` 변수를 초기화합니다.
+```dart
+class Logger {
+  final String name;
+  bool mute = false;
+
+  // _cache는 클래스 내부에서만 사용됩니다.
+  // 이름 앞에 '_' 를 붙이면 private이 됩니다.
+  static final Map<String, Logger> _cache = <String, Logger>{};
+
+  factory Logger(String name) {
+    return _cache.putIfAbsent(name, () => Logger._internal(name));
+  }
+
+  factory Logger.fromJson(Map<String, Object> json) {
+    return Logger(json['name'].toString());
+  }
+
+  Logger._internal(this.name);
+
+  void log(String msg) {
+    if (!mute) print(msg);
+  }
+}
+```
+
+> Note: 팩토리 생성자는 `this` 에 접근할 수 없습니다.
+
+팩토리 생성자는 다른 생성자를 호출하는 것과 동일한 방식으로 호출합니다.
+```dart
+var logger = Logger('UI');
+logger.log('Button clicked');
+
+var logMap = {'name': 'UI'};
+var loggerJson = Logger.fromJson(logMap);
+```
