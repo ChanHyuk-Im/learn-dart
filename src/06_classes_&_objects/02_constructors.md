@@ -36,10 +36,10 @@ class Point {
 형식 매개변수 초기화를 통해 초기화된 변수는 암시적으로 `final` 변수이며, 초기화 목록의 범위 내에서만 적용됩니다.
 
 ## 기본 생성자 (Default Constructors)
-생성자를 선언하지 않으면 `기본 생성자` 가 제공됩니다. 기본 생성자는 인수가 없으며, 상위 클래스에서 인수가 없는 생성자를 호출합니다.
+생성자를 선언하지 않으면 `기본 생성자` 가 제공됩니다. 기본 생성자는 인수가 없으며, 상위 클래스(`Superclass`)에서 인수가 없는 생성자를 호출합니다.
 
 ## 상속되지 않는 생성자 (Constructors aren't inherited)
-하위 클래스는 상위 클래스에서 생성자를 상속하지 않습니다. 생성자를 선언하지 않는 하위 클래스에는 기본 생성자만 제공됩니다.
+하위 클래스(`Subclass`)는 상위 클래스에서 생성자를 상속하지 않습니다. 생성자를 선언하지 않는 하위 클래스에는 기본 생성자만 제공됩니다.
 
 ## 명명된 생성자 (Named Constructors)
 `명명된 생성자` 를 사용해서 클래스에 대한 여러 생성자를 구현하거나 명확성을 제공합니다.
@@ -61,3 +61,89 @@ class Point {
 ```
 
 생성자는 상속되지 않는다는 것을 기억하세요. 즉, 상위 클래스의 명명된 생성자가 하위 클래스에 의해 상속되지 않는다는 것을 의미합니다. 상위 클래스에 정의된 명명된 생성자를 사용해서 하위 클래스를 만들기 위해서는 해당 생성자를 하위 클래스에서 구현해야 합니다.
+
+## 기본이 아닌 상위 클래스 생성자 호출 (Invoking a Non-Default Superclass Constructor)
+기본적으로 하위 클래스의 생성자는 상위 클래스의 `명명되지 않은 인수없는 생성자` 를 호출합니다. 상위 클래스의 생성자는 생성자 본문의 시작 부분에서 호출됩니다. 초기화 목록이 있는 경우, 상위 클래스가 호출되기 전에 실행됩니다. 요약하면 실행 순서는 다음과 같습니다.
+
+- 초기화 목록 (`Initializer List`)
+- 상위 클래스의 인수가 없는 생성자 (`Superclass's No-arg Constructor`)
+- 해당 클래스의 인수가 없는 생성자 (`Main class's No-arg Constructor`)
+
+상위 클래스에 명명되지 않은 인수없는 생성자가 없으면 상위 클래스의 생성자 중 하나를 수동으로 호출해야 합니다. 생성자 본문 바로 앞에 `: 상위 클래스 생성자` 를 지정합니다.
+
+다음 예제에서 `Employee` 클래스의 생성자는 해당 상위 클래스인 `Person` 의 명명된 생성자를 호출합니다.
+```dart
+class Person {
+  String? firstName;
+
+  Person.fromJson(Map data) {
+    print('in Person');
+  }
+}
+
+class Employee extends Person {
+  // Person 클래스는 기본 생성자가 없습니다.
+  // super.fromJson() 생성자를 호출해야 합니다.
+  Employee.fromJson(super.data) : super.fromJson() {
+    print('in Employee');
+  }
+}
+
+void main() {
+  var employee = Employee.fromJson({});
+  print(employee);
+  // 출력:
+  // in Person
+  // in Employee
+  // 'Employee' 인스턴스
+}
+```
+
+상위 클래스 생성자에 대한 인수는 생성자를 호출하기 전에 평가되기 때문에, 인수는 함수 호출과 같은 표현식일 수 있습니다.
+```dart
+class Employee extends Person {
+  Employee() : super.fromJson(fetchDefaultData());
+  // ···
+}
+```
+
+> 주의: 상위 클래스 생성자의 인수는 `this` 에 접근할 수 없습니다. 예를 들어, 인수는 정적 메서드를 호출할 수 있지만 인스턴스 메서드는 호출할 수 없습니다.
+
+### 수퍼 파라미터 (Super Parameters)
+각 파라미터를 생성자의 수퍼 호출에 수동으로 전달하지 않으려면, `super 초기화 파라미터(super-initializer parameters)`를 사용해서 지정된 또는 기본 상위 클래스 생성자로 파라미터를 전달할 수 있습니다. 이 기능은 리디렉션 생성자(`Redirecting Constructors`) 와 함께 사용할 수 없습니다. super 초기화 파라미터는 [형식 파라미터를 초기화](https://dart.dev/language/constructors#initializing-formal-parameters)하는 것과 유사한 구문 및 의미를 가집니다.
+```dart
+class Vector2d {
+  final double x;
+  final double y;
+
+  Vector2d(this.x, this.y);
+}
+
+class Vector3d extends Vector2d {
+  final double z;
+
+  // x 와 y 파라미터를 다음과 같이 기본 super 생성자로 전달합니다.
+  // Vector3d(final double x, final double y, this.z) : super(x, y);
+  Vector3d(super.x, super.y, this.z);
+}
+```
+
+super 생성자 호출에 이미 위치 인수(`Positional Arguments`)가 있는 경우, super 초기화 파라미터는 위치가 될 수 없지만 항상 다음과 같이 이름을 지정할 수 있습니다.
+```dart
+class Vector2d {
+  // ...
+
+  Vector2d.named({required this.x, required this.y});
+}
+
+class Vector3d extends Vector2d {
+  // ...
+
+  // y 파라미터를 다음과 같이 명명된 수퍼 생성자로 전달합니다.
+  // Vector3d.yzPlane({required double y, required this.z})
+  //       : super.named(x: 0, y: y);
+  Vector3d.yzPlane({required super.y, required this.z}) : super.named(x: 0);
+}
+```
+
+> Version Note: super 초기화 파라미터를 사용하려면 언어 버전이 2.17 이상이어야 합니다. 이전 언어 버전을 사용하는 경우에는 모든 super 생성자 파라미터를 수동으로 전달해야 합니다.
