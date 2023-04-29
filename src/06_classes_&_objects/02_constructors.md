@@ -203,3 +203,17 @@ class Point {
   Point.alongXAxis(double x) : this(x, 0);
 }
 ```
+
+## 상수 생성자 (Constant Constructors)
+클래스가 절대 변경되지 않는 객체를 생성하는 경우에는 이런 객체를 컴파일타임 상수로 만들 수 있습니다. 이렇게 하려면 `const` 생성자를 정의하고 모든 인스턴스 변수가 `final` 인지 확인합니다.
+```dart
+class ImmutablePoint {
+  static const ImmutablePoint origin = ImmutablePoint(0, 0);
+
+  final double x, y;
+
+  const ImmutablePoint(this.x, this.y);
+}
+```
+
+`상수 생성자` 가 항상 상수를 생성하는 것은 아닙니다. 자세한 내용은 [생성자 사용하기](https://dart.dev/language/classes#using-constructors) 를 확인하세요.
