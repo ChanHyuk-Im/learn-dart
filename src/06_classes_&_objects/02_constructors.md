@@ -110,7 +110,7 @@ class Employee extends Person {
 > 주의: 상위 클래스 생성자의 인수는 `this` 에 접근할 수 없습니다. 예를 들어, 인수는 정적 메서드를 호출할 수 있지만 인스턴스 메서드는 호출할 수 없습니다.
 
 ### 수퍼 파라미터 (Super Parameters)
-각 파라미터를 생성자의 수퍼 호출에 수동으로 전달하지 않으려면, `super 초기화 파라미터(super-initializer parameters)`를 사용해서 지정된 또는 기본 상위 클래스 생성자로 파라미터를 전달할 수 있습니다. 이 기능은 리디렉션 생성자(`Redirecting Constructors`) 와 함께 사용할 수 없습니다. super 초기화 파라미터는 [형식 파라미터를 초기화](https://dart.dev/language/constructors#initializing-formal-parameters)하는 것과 유사한 구문 및 의미를 가집니다.
+각 파라미터를 생성자의 수퍼 호출에 수동으로 전달하지 않으려면, `super 초기화 파라미터(super-initializer parameters)`를 사용해서 지정된 또는 기본 상위 클래스 생성자로 파라미터를 전달할 수 있습니다. 이 기능은 생성자 리디렉션(`Redirecting Constructors`)과 함께 사용할 수 없습니다. super 초기화 파라미터는 [형식 파라미터를 초기화](https://dart.dev/language/constructors#initializing-formal-parameters)하는 것과 유사한 구문 및 의미를 가집니다.
 ```dart
 class Vector2d {
   final double x;
@@ -187,5 +187,19 @@ class Point {
 void main() {
   var p = Point(2, 3);
   print(p.distanceFromOrigin);
+}
+```
+
+## 생성자 리디렉션 (Redirecting Constructors)
+때때로 동일한 클래스의 다른 생성자로 리디렉션하는 기능만을 가진 생성자가 있을 수 있습니다. `리디렉션 생성자` 의 본문은 비어있으며, 생성자 호출은 `:` 뒤에서 합니다.
+```dart
+class Point {
+  double x, y;
+
+  // 이 클래스의 메인 생성자입니다.
+  Point(this.x, this.y);
+
+  // 메인 생성자로 리디렉션합니다.
+  Point.alongXAxis(double x) : this(x, 0);
 }
 ```
