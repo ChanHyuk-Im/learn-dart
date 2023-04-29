@@ -147,3 +147,45 @@ class Vector3d extends Vector2d {
 ```
 
 > Version Note: super 초기화 파라미터를 사용하려면 언어 버전이 2.17 이상이어야 합니다. 이전 언어 버전을 사용하는 경우에는 모든 super 생성자 파라미터를 수동으로 전달해야 합니다.
+
+## 초기화 목록 (Initializer List)
+상위 클래스 생성자를 호출하는 것 외에도 생성자 본문이 실행되기 전에 인스턴스 변수를 초기화할 수도 있습니다. `,` 로 구분합니다.
+```dart
+// 초기화 목록은 생성자 본문이 실행되기 전에
+// 인스턴스 변수를 설정합니다.
+Point.fromJson(Map<String, double> json)
+    : x = json['x']!,
+      y = json['y']! {
+  print('In Point.fromJson(): ($x, $y)');
+}
+```
+
+> 주의: 초기화 목록의 오른쪽 부분은 `this` 에 접근할 수 없습니다.
+
+개발 중에, 초기화 목록에서 `assert` 를 사용하여 입력의 유효성(`valication`)을 검사할 수 있습니다.
+```dart
+Point.withAssert(this.x, this.y) : assert(x >= 0) {
+  print('In Point.withAssert(): ($x, $y)');
+}
+```
+
+초기화 목록은 `final` 필드를 설정할 때 편리하게 사용할 수 있습니다. 다음 예시는 초기화 목록에서 세 개의 `final` 필드를 초기화합니다.
+```dart
+import 'dart:math';
+
+class Point {
+  final double x;
+  final double y;
+  final double distanceFromOrigin;
+
+  Point(double x, double y)
+      : x = x,
+        y = y,
+        distanceFromOrigin = sqrt(x * x + y * y);
+}
+
+void main() {
+  var p = Point(2, 3);
+  print(p.distanceFromOrigin);
+}
+```
