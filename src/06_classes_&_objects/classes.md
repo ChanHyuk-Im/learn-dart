@@ -147,7 +147,7 @@ abstract class AbstractContainer {
 
 클래스는 `implements` 절에 인터페이스를 선언한 다음, 인터페이스에 필요한 API를 제공하여 하나 이상의 인터페이스를 구현합니다. 다음은 예시 코드입니다.
 ```dart
-// Person 클래스. 암시적 인터페이스에는 greet()이 있습니다.
+// Person 클래스. greet()이 포함된 암시적 인터페이스가 생성됩니다.
 class Person {
   // 인터페이스에는 존재하지만, 이 인터페이스 내부에서만 사용할 수 있습니다.
   final String _name;
@@ -178,3 +178,50 @@ void main() {
 ```dart
 class Point implements Comparable, Location {...}
 ```
+
+## 클래스 변수 및 메서드 (Class Variables and Methods)
+`static` 키워드를 사용하면 동일한 `클래스 모두에서 사용할 수 있는(class-wide)` 변수와 메서드를 구현할 수 있습니다.
+
+### 정적 변수 (Static Variables)
+`정적 변수(클래스 변수)` 는 클래스 모두에서 사용할 수 있는 `상태(state)` 및 `상수(constant)` 에 유용합니다.
+```dart
+class Queue {
+  static const initialCapacity = 16;
+  // ···
+}
+
+void main() {
+  assert(Queue.initialCapacity == 16);
+}
+```
+
+정적 변수는 사용되기 전까지 초기화되지 않습니다.
+
+### 정적 메서드 (Static Methods)
+`정적 메서드(클래스 메서드)` 는 인스턴스에서 작동하지 않으므로, `this` 에 대한 접근 권한이 없습니다. 그러나 정적 변수에는 접근할 수 있습니다. 다음 예시에서 볼 수 있듯이, 클래스에서 직접 정적 메서드를 호출합니다.
+```dart
+import 'dart:math';
+
+class Point {
+  double x, y;
+  Point(this.x, this.y);
+
+  static double distanceBetween(Point a, Point b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+
+void main() {
+  var a = Point(2, 2);
+  var b = Point(4, 4);
+  var distance = Point.distanceBetween(a, b);
+  assert(2.8 < distance && distance < 2.9);
+  print(distance);
+}
+```
+
+> Note: 공통으로 사용되는 유틸리티 및 기능에 대해서는 정적 메서드 대신 `최상위 함수(Top-Level Function)` 를 하용하는 것이 좋습니다.
+
+정적 메서드를 컴파일타임 상수로 사용할 수 있습니다. 예를 들어, 정적 메서드를 상수 생성자에 대한 파라미터로 전달할 수 있습니다.
