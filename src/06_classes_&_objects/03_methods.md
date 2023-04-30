@@ -58,3 +58,30 @@ void main() {
   assert(v - w == Vector(0, 1));
 }
 ```
+
+## Getter 와 Setter (Getter and Setter)
+`Getter` 와 `Setter` 는 객체의 속성에 대한 읽기 및 쓰기 기능을 제공하는 특수한 메서드입니다. 각 인스턴스 변수에는 암시적으로 `Getter` 가 있고, 경우에 따라 `Setter` 가 있습니다. `get` 및 `set` 키워드를 사용해서 `Getter` 와 `Setter` 를 추가적으로 구현할 수 있습니다.
+```dart
+class Rectangle {
+  double left, top, width, height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  // 연산되는 속성 right 와 bottom 을 정의합니다.
+  double get right => left + width;
+  set right(double value) => left = value - width;
+  double get bottom => top + height;
+  set bottom(double value) => top = value - height;
+}
+
+void main() {
+  var rect = Rectangle(3, 4, 20, 15);
+  assert(rect.left == 3);
+  rect.right = 12;
+  assert(rect.left == -8);
+}
+```
+
+`Getter` 와 `Setter` 를 사용하면 인스턴스 변수로 시작해서 나중에 메서드로 래핑하기 쉽습니다.
+
+> Note: `++` 같은 연산자는 `Getter` 와 상관없이 기존대로 동작합니다. 예상치 못한 부작용을 피하기 위해 연산자는 `Getter` 를 정확히 한 번만 호출해서 해당 값을 임시 변수에 저장합니다.
