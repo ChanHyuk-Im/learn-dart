@@ -143,3 +143,24 @@ extension on String {
   bool get isBlank => trim().isEmpty;
 }
 ```
+
+> Note: 확장 선언 내에서만 이름없는 확장의 정적 멤버를 호출할 수 있습니다.
+
+## 제네릭 확장 구현 (Implementing Generic Extensions)
+확장은 제네릭 타입 파라미터를 가질 수 있습니다. 예를 들어, 다음은 `Getter`, `연산자` 그리고 `메서드`를 사용해서 `List<T>` 타입을 확장하는 코드입니다.
+```dart
+extension MyFancyList<T> on List<T> {
+  int get doubleLength => length * 2;
+  List<T> operator -() => reversed.toList();
+  List<List<T>> split(int at) => [sublist(0, at), sublist(at)];
+}
+```
+
+타입 `T` 는 메서드가 호출되는 `List` 의 정적 타입을 기반으로 바인딩됩니다.
+
+## 추가정보
+확장 메서드에 대해 더 자세히 알아보려면 다음 목록을 참고하세요.
+
+- [Article: Dart Extension Methods Fundamentals](https://medium.com/dartlang/extension-methods-2d466cd8b308)
+- [Feature specification](https://github.com/dart-lang/language/blob/main/accepted/2.7/static-extension-methods/feature-specification.md#dart-static-extension-methods-design)
+- [Extension methods sample](https://github.com/dart-lang/samples/tree/main/extension_methods)
