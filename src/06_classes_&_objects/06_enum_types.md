@@ -55,3 +55,51 @@ enum Vehicle implements Comparable<Vehicle> {
 ```
 
 > Version note: 향상된 열거형을 사용하려면 언어 버전이 2.17 이상이어야 합니다.
+
+## 열거형 사용하기 (Using Enums)
+다른 정적 변수와 마찬가지로 열거된 값에 접근합니다.
+```dart
+final favoriteColor = Color.blue;
+if (favoriteColor == Color.blue) {
+  print('Your favorite color is blue!');
+}
+```
+
+열거형의 각 값에는 0부터 시작하는 위치를 반환하는 `index Getter` 가 있습니다. 예를 들어, 첫 번째 값의 index는 0이고 두 번째 값의 index는 1입니다.
+```dart
+assert(Color.red.index == 0);
+assert(Color.green.index == 1);
+assert(Color.blue.index == 2);
+```
+
+열거형의 모든 값의 목록을 얻으려면 열거형의 `values` 상수를 사용하면 됩니다.
+```dart
+List<Color> colors = Color.values;
+assert(colors[2] == Color.blue);
+```
+
+`switch` 문에서 열거형을 사용할 수 있으며, 열거형의 모든 값을 처리하지 않으면 경고(`warning`)가 발생됩니다.
+```dart
+var aColor = Color.blue;
+
+switch (aColor) {
+  case Color.red:
+    print('Red as roses!');
+    break;
+  case Color.green:
+    print('Green as grass!');
+    break;
+  default: // 이 부분이 없으면 경고가 표시됩니다.
+    print(aColor); // 'Color.blue'
+}
+```
+
+`Color.blue` 에서 `'blue'` 와 같은 열거형 값의 이름에 접근해야하는 경우, `.name` 속성을 사용합니다.
+```dart
+print(Color.blue.name); // 'blue'
+```
+
+열거형 값의 멤버에 접근해야하는 경우, 일반 객체처럼 사용하면 됩니다.
+```dart
+print(Vehicle.car.carbonFootprint);
+```
