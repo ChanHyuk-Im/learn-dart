@@ -112,3 +112,34 @@ print('42'.parseNum());
 ```
 
 위 코드에서 볼 수 있듯이 접두사를 사용해서 `import` 하는 경우에도 암시적으로 확장 메서드를 호출할 수 있습니다. 접두사를 사용해야 하는 유일한 경우는 확장을 명시적으로 호출할 때 이름 충돌을 방지하는 것입니다.
+
+## 확장 메서드 구현 (Implementing Extension Methods)
+아래의 문법을 사용해서 확장을 구현할 수 있습니다.
+```dart
+extension <extension name>? on <type> {
+  (<member definition>)*
+}
+```
+
+예를 들어, `String` 클래스에서 확장을 구현하는 방법은 다음과 같습니다.
+```dart
+extension NumberParsing on String {
+  int parseInt() {
+    return int.parse(this);
+  }
+
+  double parseDouble() {
+    return double.parse(this);
+  }
+}
+```
+
+확장의 멤버는 `메서드`, `Getter`, `Setter` 또는 `연산자` 일 수 있습니다. 확장에는 `정적 필드` 와 `정적 헬퍼 메서드` 도 있을 수 있습니다.
+
+### 이름없는 확장 (Unnamed Extensions)
+확장을 선언할 때 이름을 생략할 수 있습니다. 이름없는 확장은 선언된 라이브러리에서만 사용할 수 있고, 이름이 없기 때문에 API 충돌을 해결하기 위한 명시적 확장을 사용할 수 없습니다.
+```dart
+extension on String {
+  bool get isBlank => trim().isEmpty;
+}
+```
