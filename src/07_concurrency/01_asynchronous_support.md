@@ -53,3 +53,20 @@ void main() async {
 > Note: 위 코드에서는 결과를 기다리지 않고 비동기 함수 `checkVersion()` 을 사용합니다. 코드에서 함수 실행이 완료되었다고 가정하면 문제가 발생할 수 있습니다. 이 문제를 방지하려면 [unawaited_futures linter 규칙](https://dart.dev/tools/linter-rules#unawaited_futures)을 사용하세요.
 
 `Futures`, `async` 및 `await` 사용에 대한 소개는 [비동기 프로그래밍 코드랩](https://dart.dev/codelabs/async-await)을 참조하세요.
+
+## async 함수 선언 (Declaring async Functions)
+`async` 함수는 함수 본문이 `async` 로 표기된 함수입니다.
+
+함수에 `async` 키워드를 추가하면 `Future` 를 반환합니다. 다음 코드는 문자열을 반환하는 동기 함수입니다.
+```dart
+String lookUpVersion() => '1.0.0';
+```
+
+위 코드를 `async` 함수로 바꾸면 반환되는 값은 `Future` 입니다.
+```dart
+Future<String> lookUpVersion() async => '1.0.0';
+```
+
+함수 본문은 `Future API` 를 사용할 필요가 없습니다. `Dart` 는 필요한 경우 `Future` 객체를 생성합니다. 함수가 의미있는 값을 반환하지 않는다면 반환 타입을 `Future<void>` 로 만드세요.
+
+`Futures`, `async` 및 `await` 사용에 대한 소개는 [비동기 프로그래밍 코드랩](https://dart.dev/codelabs/async-await)을 참조하세요.
