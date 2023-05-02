@@ -70,3 +70,39 @@ Future<String> lookUpVersion() async => '1.0.0';
 함수 본문은 `Future API` 를 사용할 필요가 없습니다. `Dart` 는 필요한 경우 `Future` 객체를 생성합니다. 함수가 의미있는 값을 반환하지 않는다면 반환 타입을 `Future<void>` 로 만드세요.
 
 `Futures`, `async` 및 `await` 사용에 대한 소개는 [비동기 프로그래밍 코드랩](https://dart.dev/codelabs/async-await)을 참조하세요.
+
+## Stream 다루기 (Handling Streams)
+`Steam` 에서 값을 가져와야 하는 경우 두 가지 옵션이 있습니다.
+
+- `async` 및 `await for(비동기 루프)` 를 사용합니다.
+- [라이브러리 둘러보기](https://dart.dev/guides/libraries/library-tour#stream)에 설명된 대로 `Stream API` 를 사용합니다.
+
+> Note: `await for` 를 사용하기 전에, 코드를 더 명확하게 만들고 실제로 모든 스트림 결과를 기다려야하는지 확인하세요. 예를 들어, UI 프레임워크는 끝없는 이벤트 스트림을 보내기 때문에 일반적으로 UI 이벤트 리스너에 대해 `await for` 를 사용하면 안됩니다.
+
+비동기 for 루프의 형식은 다음과 같습니다.
+```dart
+await for (varOrType identifier in expression) {
+  // 스트림이 값을 발생시킬 때마다 실행됩니다.
+}
+```
+
+위 코드에서 `expression` 의 값은 `Stream` 타입이어야 합니다. 실행은 다음와 같이 진행됩니다.
+
+1. 스트림이 값을 발생시킬때까지 기다립니다.
+2. 발생된 값으로 설정된 변수를 사용해서 for 루프의 본문을 실행합니다.
+3. 스트림이 닫힐때까지 1과 2를 반복합니다.
+
+스트림 수신을 중지하려면 for 루프를 중단하고 스트림 구독을 취소하는 `break` 또는 `return` 문을 사용합니다.
+
+비동기 for 루프를 구현할 때 컴파일타임 에러가 발생하면 `await for` 가 `async` 함수 안에 있는지 확인하세요. 예를 들어, 앱의 `main()` 함수에서 비동기 for 루프를 사용하려면 `main()` 본문을 `async` 로 표기해야 합니다.
+```dart
+void main() async {
+  // ...
+  await for (final request in requestServer) {
+    handleRequest(request);
+  }
+  // ...
+}
+```
+
+비동기 프로그래밍에 대한 자세한 내용은 라이브러리 둘러보기의 [dart:async](https://dart.dev/guides/libraries/library-tour#dartasync---asynchronous-programming) 섹션을 참조하세요.
