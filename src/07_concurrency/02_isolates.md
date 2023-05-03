@@ -196,3 +196,11 @@ isolate 기능을 보다 세부적으로 제어하기위해 이러한 프리미�
 ![isolate-custom-bg-worker](https://dart.dev/language/concurrency/images/isolate-custom-bg-worker.png)
 
 [long_running_isolate.dart](https://github.com/dart-lang/samples/blob/main/isolates/bin/long_running_isolate.dart) 예제를 확인해보세요. 이 예제는 isolate 사이에서 여러 번 메세지를 주고받는 `장기 실행(long-running)` isolate를 생성하는 방법을 보여줍니다.
+
+## 성능 및 isolate 그룹 (Performance and isolate groups)
+isolate가 `Isolate.spawn()` 을 호출하면 두 isolate는 동일한 실행 코드를 가지며 동일한 isolate 그룹에 있습니다. isolate 그룹은 코드 공유와 같은 성능 최적화를 가능하게 합니다. 새로운 isolate는 isolate 그룹이 소유한 코드를 즉시 실행합니다. 또한 `Isolate.exit()` 은 isolate가 동일한 isolate 그룹에 있는 경우에만 동작합니다.
+
+일부 특수한 경우에, 지정된 URI에 있는 코드의 복사본으로 새로운 isolate를 설정하는 `Isolate.spawnUri()` 를 사용해야 할 수 있습니다. 그러나 `spawnUri()` 는 `spawn()` 보다 훨씬 느리고, 새로운 isolate는 생성자의 isolate 그룹에 없습니다. 또 다른 성능 결과는, isolate가 다른 그룹에 있을 때 메세지 전달이 느려진다는 것입니다.
+
+> Flutter note: Flutter는 `Isolate.spawnUri()` 를 지원하지 않습니다.
+
