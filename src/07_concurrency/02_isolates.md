@@ -106,7 +106,7 @@ isolate에 대해 전혀 생각할 필요가 없는 경우가 많습니다. `Dar
 클라이언트 앱에서 너무 긴 동기 작업의 결과는 종종 버벅거리는(부드럽지 않은) UI 문제를 발생시킵니다. 최악의 상황은 UI가 완전히 응답하지 않을 수 있습니다.
 
 ### 백그라운드 워커 (Background workers)
-시간이 많이 걸리는 연산([대용량 JSON 파일 파싱](https://docs.flutter.dev/cookbook/networking/background-parsing) 등)으로 인해 앱의 UI가 응답하지 않는 경우, 해당 연산을 종종 `백그라운드 워커` 라고 불리는 worker isolate로 위임하는 것이 좋습니다. 다음 그림에서 볼 수 있듯이 일반적인 경우는 연산을 수행한 다음 종료하는 간단한 worker isolate를 생성하는 것입니다. worker isolate는 worker가 종료될 때 결과를 반환합니다.
+시간이 많이 걸리는 연산([대용량 JSON 파일 파싱](https://docs.flutter.dev/cookbook/networking/background-parsing) 등)으로 인해 앱의 UI가 응답하지 않는 경우, 해당 연산을 종종 `백그라운드 워커` 라고 불리는 worker isolate로 위임하는 것이 좋습니다. 다음 그림에서 볼 수 있듯이 일반적인 경우는 연산을 수행한 다음 종료하는 simple worker isolate를 생성하는 것입니다. worker isolate는 worker가 종료될 때 결과를 반환합니다.
 
 ![isolate-bg-worker](https://dart.dev/language/concurrency/images/isolate-bg-worker.png)
 
@@ -115,3 +115,84 @@ isolate에 대해 전혀 생각할 필요가 없는 경우가 많습니다. `Dar
 메세지로 보낼 수 있는 객체 종류에 대한 자세한 내용은 [send() 메서드](https://api.dart.dev/stable/2.19.6/dart-isolate/SendPort/send.html)에 대한 API 문서를 참조하세요.
 
 worker isolate는 I/O를 수행하고 타이머를 설정하는 등의 작업을 수행할 수 있습니다. 자체 메모리가 있으며 main isolate와 상태를 공유하지 않습니다. worker isolate는 다른 isolate에 영향을 주지 않고 코드 실행을 멈출 수 있습니다.
+
+## 예제 코드 (Code examples)
+이 섹션에서는 `Isolate` API를 사용해서 isolate를 구현하는 몇 가지 예시를 설명합니다.
+
+### simple worker isolate 구현 (Implementing a simple worker isolate)
+이 예제는 simple worker isolate를 생성하는 main isolate를 구현합니다. `Isolate.run()` 은 worker isolate 설정 및 관리 이후의 단계를 단순화합니다.
+
+1. isolate를 생성합니다.
+2. 생성된 isolate에서 함수를 실행합니다.
+3. 결과값을 저장합니다.
+4. 결과값을 main isolate로 반환합니다.
+5. 작업이 완료되면 isolate를 종료합니다.
+6. 예외 및 에러를 체크, 포착하고 main isolate로 반환합니다.
+
+> Flutter note: Flutter를 사용하는 경우, `Isolate.run()` 대신 [Flutter의 compute() 함수](https://api.flutter.dev/flutter/foundation/compute-constant.html)를 사용하는 것이 좋습니다. `compute` 함수를 사용하면 코드가 [네이티브 및 비네이티브 플랫폼(native and non-native platforms)](https://dart.dev/overview#platform) 모두에서 작동될 수 있습니다. 보다 인체공학적(`ergonomic`) API를 위한 네이티브 플랫폼만을 대상으로 할 때 `Isolate.run()` 을 사용하세요.
+
+#### 새로운 isolate에서 기존의 메서드 실행하기 (Running an existing method in a new isolate)
+main isolate에는 새로운 isolate를 생성하는 코드가 포함되어 있습니다.
+```dart
+void main() async {
+  // data를 읽어옵니다.
+  final jsonData = await Isolate.run(_readAndParseJson);
+
+  // data를 사용합니다.
+  print('Number of JSON keys: ${jsonData.length}');
+}
+```
+
+생성된 isolate는 첫 번째 인수로 전달된 `_readAndParseJson` 함수를 실행합니다.
+```dart
+Future<Map<String, dynamic>> _readAndParseJson() async {
+  final fileData = await File(filename).readAsString();
+  final jsonData = jsonDecode(fileData) as Map<String, dynamic>;
+  return jsonData;
+}
+```
+
+1. `Isolate.run()` 은 background worker인 isolate를 생성하고 `main()` 은 결과를 기다립니다.
+2. 생성된 isolate는 `run()` 에 전달된 인수인 `_readAndParseJson()` 함수를 실행합니다.
+3. `Isolate.run()` 은 `return` 에서 결과를 가져오고, 값을 main isolate로 다시 전달한 후 worker isolate를 종료합니다.
+4. worker isolate는 결과를 보관하는 메모리를 main isolate로 전송합니다(데이터를 복사하지 않습니다). worker isolate는 유효성 검사를 수행해서 객체를 전송할 수 있는지 확인합니다.
+
+`_readAndParseJson()` 은 main isolate에서 직접 쉽게 실행할 수 있는 기존의(`existing`) 비동기 함수입니다. 대신 `Isolate.run()` 을 사용해서 실행하면 동시성이 활성화됩니다. worker isolate는 `_readAndParseJson()` 의 연산을 완전히 추상화합니다. main isolate를 멈춰두지 않고 작업을 완료할 수 있습니다.
+
+`Isolate.run()` 의 결과는 항상 `Future` 입니다. main isolate의 코드가 계속 실행되기 때문입니다. worker isolate가 실행하는 연산이 동기식이든 비동기식이든 동시에 실행되기 때문에 main isolate에 영향을 끼치지 않습니다.
+
+전체 프로그램은 [send_and_receive.dart](https://github.com/dart-lang/samples/blob/main/isolates/bin/send_and_receive.dart) 예제를 확인해보세요.
+
+#### isolate로 클로저 전송하기 (Sending closures with isolates)
+main isolate에서 직접 `함수 리터럴` 또는 `클로저` 를 사용해서 `run()` 으로 simple worker isolate를 만들 수도 있습니다.
+```dart
+void main() async {
+  // data를 읽어옵니다.
+  final jsonData = await Isolate.run(() async {
+    final fileData = await File(filename).readAsString();
+    final jsonData = jsonDecode(fileData) as Map<String, dynamic>;
+    return jsonData;
+  });
+
+  // data를 사용합니다.
+  print('Number of JSON keys: ${jsonData.length}');
+}
+```
+
+위 코드는 이전 코드와 동일하게 동작합니다. 새로운 isolate가 생성되고 특정 연산을 수행한 후 결과를 반환합니다.
+
+하지만 이제 isolate는 [클로저](https://dart.dev/language/functions#anonymous-functions)를 전송합니다. 클로저는 작동 방식과 작성 방식 모두에서 일반적인 명명된 함수보다 덜 제한적입니다. 위 코드에서 `Isolate.run()` 은 로컬 코드처럼 보이는 것을 동시에 실행합니다. 그런 의미에서 `run()` 이 `병렬실행(run in parallel)` 을 위한 [제어흐름 연산자](https://dart.dev/language/control-flow)처럼 작동한다고 상상할 수 있습니다. 
+
+### isolate 간에 여러 메세지 보내기 (Sending multiple messages between isolates)
+`Isolate.run()` 은 isolate 관리를 단순화하기 위해 `하위 수준 격리 관련(lower-level, isolate-related)` API를 추상화합니다.
+
+- [Isolate.spawn()](https://api.dart.dev/stable/2.19.6/dart-isolate/Isolate/spawn.html) 및 [Isolate.exit()](https://api.dart.dev/stable/2.19.6/dart-isolate/Isolate/exit.html)
+- [ReceivePort](https://api.dart.dev/stable/2.19.6/dart-isolate/ReceivePort-class.html) 및 [SendPort](https://api.dart.dev/stable/2.19.6/dart-isolate/SendPort-class.html)
+
+isolate 기능을 보다 세부적으로 제어하기위해 이러한 프리미티브(`primitive`)를 직접 사용할 수 있습니다. 예를 들어, `run()` 은 단일 메세지를 반환한 후 isolate를 종료합니다. isolate 사이에 여러 베세지가 전달되도록 하려면 어떻게 해야할까요? 조금 다른 방식으로, `SendPort` 의 [send() 메서드](https://api.dart.dev/stable/2.19.6/dart-isolate/SendPort/send.html)를 활용해서 `run()` 이 구현되는 것과 거의 동일한 방식으로 자체 isolate를 설정할 수 있습니다.
+
+다음 그림에서 볼 수 있듯이, 일반적인 패턴 중 하나는 main isolate가 worker isolate에 요청 메세지를 보낸다음 하나 이상의 응답 메세지를 보내는 것입니다.
+
+![isolate-custom-bg-worker](https://dart.dev/language/concurrency/images/isolate-custom-bg-worker.png)
+
+[long_running_isolate.dart](https://github.com/dart-lang/samples/blob/main/isolates/bin/long_running_isolate.dart) 예제를 확인해보세요. 이 예제는 isolate 사이에서 여러 번 메세지를 주고받는 `장기 실행(long-running)` isolate를 생성하는 방법을 보여줍니다.
