@@ -204,3 +204,9 @@ isolate가 `Isolate.spawn()` 을 호출하면 두 isolate는 동일한 실행 �
 
 > Flutter note: Flutter는 `Isolate.spawnUri()` 를 지원하지 않습니다.
 
+## 웹에서의 동시성 (Concurrency on the web)
+모든 `Dart` 앱은 `non-bloking`, `인터리브 연산(interleaved computation)` 을 위해 `async-await`, `Future` 및 `Stream` 을 사용할 수 있습니다. 그러나 `Dart` 웹 플랫폼은 isolate를 지원하지 않습니다. `Dart` 웹앱은 isolate와 유사한 백그라운드 스레드에서 스크립트를 실행하기 위해 [web worker](https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API/Using_web_workers)를 사용할 수 있습니다. 그러나 web worker의 기능은 isolate와 다소 다릅니다.
+
+예를 들어, web worker가 스레드 간에 데이터를 보낼 때 데이터를 앞뒤로(`back and forth`) 복사합니다. 그러나 특히 대용량 메세지의 경우 데이터 복사 속도가 매우 느릴 수 있습니다. isolate는 동일한 작업을 수행하지만 대신에 메세지를 보관하는 메모리를 보다 효율적으로 전송할 수 있는 API를 제공합니다.
+
+web worker 및 isolate 생성도 다릅니다. 별도의 프로그램 진입점을 선언하고 별도로 컴파일해야지만 web worker를 생성할 수 있습니다. web worker를 시작하는 것은 `Isolate.spawnUri` 를 사용해서 isolate를 시작하는 것과 유사합니다. `Isolate.spawn` 을 사용해서 isolate를 시작할 수도 있습니다. 이 경우, isolate를 생성하는 것과 [동일한 코드 및 데이터 중 일부를 재사용](https://dart.dev/language/concurrency#performance-and-isolate-groups)하기 때문에 더 적은 리소스가 필요합니다. web worker에게는 같은 기능을 하는 API가 없습니다.
