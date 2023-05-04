@@ -65,7 +65,7 @@ void main() {
 }
 ```
 
-> `late` 변수를 초기화하지 못하면, 변수를 사용할 때 런타임 에러가 발생합니다.
+> `late` 변수를 초기화하지 못하면, 변수를 사용할 때 런타임(`run-time`) 에러가 발생합니다.
 
 변수를 `late` 로 표시했지만 선언할 때 초기화하면 변수가 처음 사용될 때 `초기화 프로그램(initializer)` 이 실행됩니다. 이 `지연 초기화(lazy initialization)` 는 몇 가지 경우에 유용합니다.
 
@@ -77,3 +77,56 @@ void main() {
 // readThermometer() 함수만을 호출하는 프로그램입니다.
 late String temperature = readThermometer(); // Lazily initialized.
 ```
+
+## final과 const (Final and const)
+변수를 앞으로 변경할 일이 없는 경우에 `var` 대신에 `final` 또는 `const` 를 사용하세요. final 변수는 한 번만 값을 할당할 수 있고, const 변수는 컴파일타임(`compile-time`) 상수입니다. const 변수는 암시적으로 final 변수입니다.
+
+> Note: [인스턴스 변수](https://dart.dev/language/classes#instance-variables)는 `final`은 될 수 있지만 `const` 는 될 수 없습니다.
+
+다음은 `final` 변수를 선언하고 값을 할당하는 예시입니다.
+```dart
+final name = 'Bob'; // 타입 annotation 없이 선언하는 경우
+final String nickname = 'Bobby';
+```
+
+`final` 변수의 값은 수정할 수 없습니다.
+```dart
+name = 'Alice'; // 에러: final 변수는 한 번만 값을 할당할 수 있습니다.
+```
+
+컴파일타임 상수로 사용할 변수에는 `const` 를 사용하세요. const 변수가 클래스 수준에 있는 경우, `static const` 로 표시합니다. 변수를 선언하는 위치에서 값을 숫자나 문자열 리터럴, const 변수 또는 상수에 대한 산술 연산 결과와 같은 컴파일타임 상수로 설정합니다.
+```dart
+const bar = 1000000; // 압력의 단위 (dynes/cm2)
+const double atm = 1.01325 * bar; // 표준 대기
+```
+
+`const` 키워드는 상수 변수를 선언하기 위한 것만이 아닙니다. `const` 를 사용해서 상수 값을 생성하고 상수 값을 생성하는 `생성자(constructor)` 를 선언할 수도 있습니다. 모든 변수는 상수 값을 가질 수 있습니다.
+```dart
+var foo = const [];
+final bar = const [];
+const baz = []; // `const []` 와 같습니다.
+```
+
+위 코드의 `baz` 와 같이 `const` 선언의 초기화 식에서 `const` 를 생략할 수 있습니다. 자세한 내용은 [const를 불필요하게 사용하지 마세요.](https://dart.dev/guides/language/effective-dart/usage#dont-use-const-redundantly) 섹션을 참고하세요.
+
+`const` 값을 가지고 있더라도 non-final, non-const 변수의 값을 변경할 수 있습니다.
+```dart
+foo = [1, 2, 3]; // 위 코드에서 const [] 값을 가지고 있었습니다.
+```
+
+`const` 변수의 값을 변경할 수 없습니다.
+```dart
+baz = [42]; // 에러: constant 변수는 값을 할당할 수 없습니다.
+```
+
+[타입 체크와 캐스트](https://dart.dev/language/operators#type-test-operators)(`is` 및 `as`), [컬렉션 if](https://dart.dev/language/collections#control-flow-operators) 및 [스프레드 연산자](https://dart.dev/language/collections#spread-operators)(`...` 및 `...?`)를 사용하는 상수를 정의할 수 있습니다.
+```dart
+const Object i = 3; // i 는 int 값을 가진 const Object 입니다.
+const list = [i as int]; // 타입 캐스트를 사용한 경우
+const map = {if (i is int) i: 'int'}; // is 와 collection if를 사용한 경우
+const set = {if (list is List<int>) ...list}; // 스프레드 연산자를 사용한 경우
+```
+
+> Note: `final` 객체는 수정할 수 없지만, 해당 필드는 변경할 수 있습니다. 반면 `const` 객체는 해당 객체와 필드를 변경할 수 없습니다. `const` 는 `immutable` 입니다.
+
+`const` 를 사용해서 상수 값을 만드는 방법에 대한 자세한 내용은 [Lists](https://dart.dev/language/collections#lists), [Maps](https://dart.dev/language/collections#maps), 및 [Classes](https://dart.dev/language/classes) 를 참고하세요.
