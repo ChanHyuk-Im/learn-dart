@@ -229,3 +229,37 @@ assert((-value >>> 4) > 0); // 부호없는 오른쪽으로 시프트
 ```
 
 > Version note: `>>>` 연산자(`트리플 시프트(triple-shift)` 또는 `무부호 시프트(unsigned shift)` 라고 부릅니다.)를 사용하려면 `Dart` 2.14 이상의 버전이 필요합니다.
+
+## 조건 표현식 (Conditional expressions)
+`Dart` 에는 `if-else` 문을 간결하게 작성할 수 있는 두 개의 연산자가 있습니다.
+
+`condition ? expr1 : expr2`   
+`condition` 이 `true` 면 `expr1` 을 반환하고, `false` 면 `expr2` 를 반환합니다.
+
+`expr1 ?? expr2`   
+`expr1` 이 non-null이면 `expr1` 을 반환하고, null이면 `expr2` 를 반환합니다.
+
+boolean 표현식을 기반으로 값을 할당해야하는 경우 `? :` 를 사용해보세요.
+```dart
+var visibility = isPublic ? 'public' : 'private';
+```
+
+boolean 표현식이 null을 검사하는 경우 `??` 를 사용하는 것이 좋습니다.
+```dart
+String playerName(String? name) => name ?? 'Guest';
+```
+
+위 코드는 적어도 두 가지 다른 방법으로도 구현할 수 있지만 간결하지 않습니다.
+```dart
+// ? : 연산자를 사용하면 조금 더 길어집니다.
+String playerName(String? name) => name != null ? name : 'Guest';
+
+// if-else문을 사용하면 많이 길어집니다.
+String playerName(String? name) {
+  if (name != null) {
+    return name;
+  } else {
+    return 'Guest';
+  }
+}
+```
