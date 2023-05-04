@@ -1,6 +1,3 @@
 # Dart Study
 
-### Execution
-```bash
-dart run src/PATH/FILENAME.dart
-```
+`src` 폴더
