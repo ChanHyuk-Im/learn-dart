@@ -263,3 +263,67 @@ String playerName(String? name) {
   }
 }
 ```
+
+## 캐스케이드 표기법 (Cascade notation)
+`캐스케이드(.., ?..)` 를 사용하면 동일한 객체에 대해 일련의 작업을 수행할 수 있습니다. 인스턴스 멤버에 접근하는 것과 동시에 동일한 객체에서 인스턴스 메서드를 호출할 수도 있습니다. 이렇게 하면 종종 임시 변수를 만드는 단계가 줄어들고 더 유동적인 코드를 작성할 수 있습니다.
+
+아래 코드를 확인해보세요.
+```dart
+var paint = Paint()
+  ..color = Colors.black
+  ..strokeCap = StrokeCap.round
+  ..strokeWidth = 5.0;
+```
+
+생성자 `Paint()` 는 `Paint` 객체를 반환합니다. 캐스케이드 표기법을 따르는 코드는 반환될 수 있는 모든 값을 무시하고 이 객체에서 작동합니다.
+
+위 코드는 다음 코드와 동일하게 작동합니다.
+```dart
+var paint = Paint();
+paint.color = Colors.black;
+paint.strokeCap = StrokeCap.round;
+paint.strokeWidth = 5.0;
+```
+
+캐스케이드가 작동하는 객체가 null일 수 있는 경우, 첫 번째 로직에 `null-shorting 캐스케이드(?..)` 를 사용합니다. `?..` 로 시작하면 해당 객체가 null일때 추가 작업이 실행되지 않습니다.
+```dart
+querySelector('#confirm') // 객체를 받아옵니다.
+  ?..text = 'Confirm' // 받아온 객체의 멤버를 사용합니다.
+  ..classes.add('important')
+  ..onClick.listen((e) => window.alert('Confirmed!'))
+  ..scrollIntoView();
+```
+
+> Version note: `?..` 구문은 `Dart` 버전 2.12 이상이 필요합니다.
+
+위 코드는 다음 코드와 동일하게 작동합니다.
+```dart
+var button = querySelector('#confirm');
+button?.text = 'Confirm';
+button?.classes.add('important');
+button?.onClick.listen((e) => window.alert('Confirmed!'));
+button?.scrollIntoView();
+```
+
+캐스케이드를 중첩해서 사용할 수도 있습니다.
+```dart
+final addressBook = (AddressBookBuilder()
+  ..name = 'jenny'
+  ..email = 'jenny@example.com'
+  ..phone = (PhoneNumberBuilder()
+    ..number = '415-555-0100'
+    ..label = 'home')
+  .build())
+.build();
+```
+
+실제 객체를 반환하는 함수에서 캐스케이드를 구성하는 것을 주의하세요. 예를 들면, 다음 코드는 에러가 발생합니다.
+```dart
+var sb = StringBuffer();
+sb.write('foo')
+  ..write('bar'); // 에러: `write` 메서드가 `void` 에 대해 정의되지 않았습니다.
+```
+
+`sb.write()` 는 `void` 를 반환하고, `void` 로는 캐스케이드를 사용할 수 없습니다.
+
+> Note: 엄밀하게 말하면, 캐스케이드에 사용하는 `..` 표기법은 연산자가 아니고 `Dart` 구문의 일부입니다.
