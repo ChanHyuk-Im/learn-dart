@@ -44,6 +44,7 @@ if (n % i == 0 && d % i == 0) ...
 
 ## 산술 연산자 (Arithmetic operators)
 `Dart` 는 다음 표와 같이 일반적인 산술 연산자를 지원합니다.
+
 |연산자|의미|
 |---|---|
 |`+`|더하기|
@@ -67,6 +68,7 @@ assert('5/2 = ${5 ~/ 2} r ${5 % 2}' == '5/2 = 2 r 1');
 ```
 
 `Dart` 는 또한 접두사 및 접미사 증감 연산자를 모두 지원합니다.
+
 |연산자|의미|
 |---|---|
 |`++var`|`var = var + 1`(표현식 결과값은 `var + 1`)|
@@ -98,6 +100,7 @@ assert(a != b); // -1 != 0
 
 ## 비교 연산자 (Equality and relational operators)
 다음 표에는 비교연산자 목록이 있습니다.
+
 |연산자|의미|
 |---|---|
 |`==`|같다.|
@@ -121,3 +124,31 @@ assert(2 < 3);
 assert(3 >= 3);
 assert(2 <= 3);
 ```
+
+## 타입 테스트 연산자 (Type test operators)
+`as`, `is` 및 `is!` 연산자는 런타임에 타입을 체크하는 데 유용합니다.
+
+|연산자|의미|
+|---|---|
+|`as`|타입 변환(`typecast`) - [라이브러리 접두사](https://dart.dev/language/libraries#specifying-a-library-prefix) 명시에도 사용됩니다.|
+|`is`|객체가 특정 타입이면 `true` 를 반환합니다.|
+|`is!`|객체가 특정 타입이 아니면 `true` 를 반환합니다.|
+
+`obj` 가 `T` 의 인터페이스륵 구현하는 경우, `obj is T` 는 `true` 입니다. 예를 들어, `obj is Object?` 는 항상 `true` 입니다.
+
+객체가 특정 타입인지 확신하는 경우에만 `as` 연산자르 사용해서 객체를 특정 타입으로 변환하세요.
+
+예시:
+```dart
+(employee as Person).firstName = 'Bob';
+```
+
+객체가 `T` 타입인지 확실하지 않은 경우, `is T` 를 사용해서 객체를 사용하기 전에 타입을 체크하세요.
+```dart
+if (employee is Person) {
+  // 타입 체크
+  employee.firstName = 'Bob';
+}
+```
+
+> Note: 위의 두 코드는 동일하지 않습니다. `employee` 가 null이거나 `Person` 이 아닌 경우에 첫 번째 코드에서 예외가 발생합니다. 하지만 두 번째 코드에서는 아무 일도 일어나지 않습니다.
