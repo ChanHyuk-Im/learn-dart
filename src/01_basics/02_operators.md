@@ -199,3 +199,33 @@ if (!done && (col == 0 || col == 3)) {
   // 코드 작성...
 }
 ```
+
+## 비트 및 시프트 연산자 (Bitwise and shift operators)
+`Dart` 에서는 숫자의 개별 비트를 다룰 수 있습니다. 일반적으로 이러한 비트 및 시프트 연산자는 정수와 함께 사용합니다.
+
+|연산자|의미|
+|`&`|AND|
+|`|`|OR|
+|`^`|XOR|
+|`~expr`|단항 비트 보수 (0은 1로, 1은 0으로 변경)|
+|`<<`|왼쪽으로 시프트|
+|`>>`|오른쪽으로 시프트|
+|`>>>`|부호없는(`unsigned`) 오른쪽으로 시프트|
+
+다음은 비트 및 시프트 연산자를 사용하는 예시입니다.
+```dart
+final value = 0x22;
+final bitmask = 0x0f;
+
+assert((value & bitmask) == 0x02); // AND
+assert((value & ~bitmask) == 0x20); // AND NOT
+assert((value | bitmask) == 0x2f); // OR
+assert((value ^ bitmask) == 0x2d); // XOR
+assert((value << 4) == 0x220); // 왼쪽으로 시프트
+assert((value >> 4) == 0x02); // 오른쪽으로 시프트
+assert((value >>> 4) == 0x02); // 부호없는 오른쪽으로 시프트
+assert((-value >> 4) == -0x03); // 오른쪽으로 시프트
+assert((-value >>> 4) > 0); // 부호없는 오른쪽으로 시프트
+```
+
+> Version note: `>>>` 연산자(`트리플 시프트(triple-shift)` 또는 `무부호 시프트(unsigned shift)` 라고 부릅니다.)를 사용하려면 `Dart` 2.14 이상의 버전이 필요합니다.
